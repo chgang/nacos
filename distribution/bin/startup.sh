@@ -23,6 +23,9 @@ OS400*) os400=true;;
 esac
 error_exit ()
 {
+    # exit0 代表正常运行程序并退出
+    # exit1 代表非正常运行导致退出程序
+    # $1传递给脚本的第一个参数
     echo "ERROR: $1 !!"
     exit 1
 }
@@ -41,8 +44,10 @@ if [ -z "$JAVA_HOME" ]; then
       export JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Versions/CurrentJDK/Home"
     fi
   else
+    # readlink -f 显示符号链接指向的最终路径
     JAVA_PATH=`dirname $(readlink -f $(which javac))`
     if [ "x$JAVA_PATH" != "x" ]; then
+      # 2>/dev/null` 忽略错误信息
       export JAVA_HOME=`dirname $JAVA_PATH 2>/dev/null`
     fi
   fi
@@ -77,6 +82,7 @@ done
 
 export JAVA_HOME
 export JAVA="$JAVA_HOME/bin/java"
+# 取当前脚本所在的上级目录
 export BASE_DIR=`cd $(dirname $0)/..; pwd`
 export CUSTOM_SEARCH_LOCATIONS=file:${BASE_DIR}/conf/
 
@@ -138,6 +144,7 @@ if [ ! -f "${BASE_DIR}/logs/start.out" ]; then
   touch "${BASE_DIR}/logs/start.out"
 fi
 # start
+# 标准错误输出重定向到标准输出，最后一个&表示后台运行
 echo "$JAVA $JAVA_OPT_EXT_FIX ${JAVA_OPT}" > ${BASE_DIR}/logs/start.out 2>&1 &
 
 if [[ "$JAVA_OPT_EXT_FIX" == "" ]]; then
