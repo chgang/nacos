@@ -64,10 +64,11 @@ public class DistroClientDataProcessor extends SmartSubscriber implements Distro
     private final DistroProtocol distroProtocol;
     
     private volatile boolean isFinishInitial;
-    
+
     public DistroClientDataProcessor(ClientManager clientManager, DistroProtocol distroProtocol) {
         this.clientManager = clientManager;
         this.distroProtocol = distroProtocol;
+        // 注册到NotifyCenter
         NotifyCenter.registerSubscriber(this, NamingEventPublisherFactory.getInstance());
     }
     
