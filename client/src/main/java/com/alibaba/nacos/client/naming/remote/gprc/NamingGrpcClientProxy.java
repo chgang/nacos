@@ -96,6 +96,7 @@ public class NamingGrpcClientProxy extends AbstractNamingClientProxy {
         labels.put(RemoteConstants.LABEL_SOURCE, RemoteConstants.LABEL_SOURCE_SDK);
         labels.put(RemoteConstants.LABEL_MODULE, RemoteConstants.LABEL_MODULE_NAMING);
         labels.put(Constants.APPNAME, AppNameUtils.getAppName());
+        // factory缓存RpcClient实例
         this.rpcClient = RpcClientFactory.createClient(uuid, ConnectionType.GRPC, labels,
                 RpcClientTlsConfig.properties(properties.asProperties()));
         this.redoService = new NamingGrpcRedoService(this);
@@ -125,6 +126,7 @@ public class NamingGrpcClientProxy extends AbstractNamingClientProxy {
     public void registerService(String serviceName, String groupName, Instance instance) throws NacosException {
         NAMING_LOGGER.info("[REGISTER-SERVICE] {} registering service {} with instance {}", namespaceId, serviceName,
                 instance);
+        // 标记当前实例即将被注册
         redoService.cacheInstanceForRedo(serviceName, groupName, instance);
         doRegisterService(serviceName, groupName, instance);
     }
@@ -214,7 +216,9 @@ public class NamingGrpcClientProxy extends AbstractNamingClientProxy {
     public void doRegisterService(String serviceName, String groupName, Instance instance) throws NacosException {
         InstanceRequest request = new InstanceRequest(namespaceId, serviceName, groupName,
                 NamingRemoteConstants.REGISTER_INSTANCE, instance);
+        // 通过grpc发送注册请求
         requestToServer(request, Response.class);
+        // 标记当前实例已被注册
         redoService.instanceRegistered(serviceName, groupName);
     }
     

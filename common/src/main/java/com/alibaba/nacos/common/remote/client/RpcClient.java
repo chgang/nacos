@@ -277,7 +277,8 @@ public abstract class RpcClient implements Closeable {
                 }
             }
         });
-        
+
+        // 感觉像是定时消费连接重连事件和健康检查连接状态
         clientEventExecutor.submit(() -> {
             while (true) {
                 try {
@@ -356,11 +357,12 @@ public abstract class RpcClient implements Closeable {
         while (startUpRetryTimes >= 0 && connectToServer == null) {
             try {
                 startUpRetryTimes--;
+                // 轮询选择nacos节点
                 ServerInfo serverInfo = nextRpcServer();
                 
                 LoggerUtils.printIfInfoEnabled(LOGGER, "[{}] Try to connect to server on start up, server: {}",
                         rpcClientConfig.name(), serverInfo);
-                
+                // 和nacos节点建立连接
                 connectToServer = connectToServer(serverInfo);
             } catch (Throwable e) {
                 LoggerUtils.printIfWarnEnabled(LOGGER,

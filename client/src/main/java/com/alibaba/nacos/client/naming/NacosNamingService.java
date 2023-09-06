@@ -141,6 +141,7 @@ public class NacosNamingService implements NamingService {
     @Override
     public void registerInstance(String serviceName, String groupName, Instance instance) throws NacosException {
         NamingUtils.checkInstanceIsLegal(instance);
+        // 默认instance.isEphemeral()=true，选择NamingGrpcClientProxy
         clientProxy.registerService(serviceName, groupName, instance);
     }
     

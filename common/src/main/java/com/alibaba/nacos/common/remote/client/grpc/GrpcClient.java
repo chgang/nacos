@@ -344,6 +344,7 @@ public abstract class GrpcClient extends RpcClient {
                 grpcConn.setConnectionId(((ServerCheckResponse) response).getConnectionId());
                 
                 //create stream request and bind connection event to this connection.
+                // 监听处理nacos服务端推送来的消息
                 StreamObserver<Payload> payloadStreamObserver = bindRequestStream(biRequestStreamStub, grpcConn);
                 
                 // stream observer to send response to server

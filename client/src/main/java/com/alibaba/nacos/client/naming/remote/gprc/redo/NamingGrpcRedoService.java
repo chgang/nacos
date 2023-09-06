@@ -136,6 +136,7 @@ public class NamingGrpcRedoService implements ConnectionEventListener {
         synchronized (registeredInstances) {
             InstanceRedoData redoData = registeredInstances.get(key);
             if (null != redoData) {
+                // 标记当前实例已被注册
                 redoData.registered();
             }
         }
