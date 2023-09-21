@@ -94,6 +94,7 @@ public class ServerListManager implements ServerListFactory, Closeable {
         if (getServerList().isEmpty() && StringUtils.isEmpty(endpoint)) {
             throw new NacosLoadException("serverList is empty,please check configuration");
         } else {
+            // 随机获取一个集群节点
             currentIndex.set(new Random().nextInt(getServerList().size()));
         }
     }
