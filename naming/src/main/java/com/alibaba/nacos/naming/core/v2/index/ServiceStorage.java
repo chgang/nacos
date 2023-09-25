@@ -145,6 +145,7 @@ public class ServiceStorage {
     }
     
     private Optional<InstancePublishInfo> getInstanceInfo(String clientId, Service service) {
+        // 相同的服务名，不同的client
         Client client = clientManager.getClient(clientId);
         if (null == client) {
             return Optional.empty();
